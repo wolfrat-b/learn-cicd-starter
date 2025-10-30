@@ -92,8 +92,10 @@ func main() {
 	srv := &http.Server{
 		Addr:    ":" + port,
 		Handler: router,
-                // Gosec Fix: Add secure timeouts ReadTimeout: 5 * time.Second,
-                WriteTimeout: 10 * time.Second, IdleTimeout: 120 * time.Second,
+                Gosec Fix: Add secure timeouts 
+                (G112) ReadTimeout: 5 * time.Second,
+                WriteTimeout: 10 * time.Second,
+                IdleTimeout: 120 * time.Second,
 	}
 
 	log.Printf("Serving on port: %s\n", port)
