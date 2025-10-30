@@ -16,7 +16,27 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.25.1"
+          # Keep this Go version consistent with the other job
+          go-version: "1.25.1" 
 
       - name: Run Go Unit Tests
         run: go test -cover ./...
+  
+  # START of the new 'style' job for parallel execution
+  style:
+    name: Style
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out code # Must be repeated in the new job
+        uses: actions/checkout@v4
+
+      - name: Set up Go # Must be repeated in the new job
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.1" # Using the same version as the 'tests' job
+
+      - name: Check for Formatting Issues
+        # This command runs go fmt and confirms it makes no changes, failing if it does.
+        run: test -z $(go fmt ./...)
+  # END of the new 'style' job
