@@ -22,8 +22,8 @@ jobs:
       - name: Run Go Unit Tests
         run: go test -cover ./...
   
-  # START of the new 'style' job for parallel execution
-style:
+  # START of the new 'style' job for parallel execution 
+  style:
     name: Style
     runs-on: ubuntu-latest
     
