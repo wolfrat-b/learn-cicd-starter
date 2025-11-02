@@ -1,0 +1,31 @@
+name: Continuous Deployment
+
+# Triggers the workflow on a push to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+  # Allows manual triggering from the GitHub Actions UI (optional but useful)
+  workflow_dispatch:
+
+jobs:
+  Deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up the Go toolchain
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          # Use your required Go version (e.g., 1.22)
+          go-version: "1.22"
+
+      # Step 3: Build the production binary
+      # This step builds the Linux-ready executable
+      - name: Build Production App
+        run: ./scripts/buildprod.sh
