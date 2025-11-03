@@ -29,3 +29,29 @@ jobs:
       # This step builds the Linux-ready executable
       - name: Build Production App
         run: ./scripts/buildprod.sh
+
+      # 1. AUTHENTICATION: Authenticate GitHub Actions with GCP
+      - name: Authenticate Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          # Uses the sensitive JSON key stored as a GitHub Repository Secret
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      # 2. CONFIGURATION: Set up gcloud CLI and Project ID
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          # Setting the project ID for all subsequent gcloud commands
+          project_id: infinite-bruin-477014-h1
+
+      # 3. BUILD & PUSH: Execute the Cloud Build submission command
+      - name: Build and Push Docker Image to Artifact Registry
+        run: |
+          # Use your specific, validated image path directly in the command.
+          IMAGE_URI="us-central1-docker.pkg.dev/infinite-bruin-477014-h1/notely-ar-repo/notely:v1.0.0"
+
+          echo "Submitting build to Cloud Build for image: ${IMAGE_URI}"
+
+          # This command triggers the Cloud Build service to build the Dockerfile
+          # in the current directory and push the resulting image to Artifact Registry.
+          gcloud builds submit --tag "${IMAGE_URI}" .
