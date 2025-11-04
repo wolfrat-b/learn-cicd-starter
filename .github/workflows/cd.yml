@@ -48,10 +48,25 @@ jobs:
       - name: Build and Push Docker Image to Artifact Registry
         run: |
           # Use your specific, validated image path directly in the command.
-          IMAGE_URI="us-central1-docker.pkg.dev/infinite-bruin-477014-h1/notely-ar-repo/notely:v1.0.0"
+          IMAGE_URI="us-central1-docker.pkg.dev/infinite-bruin-477014-h1/notely-ar-repo/notely:latest"
 
           echo "Submitting build to Cloud Build for image: ${IMAGE_URI}"
 
           # This command triggers the Cloud Build service to build the Dockerfile
           # in the current directory and push the resulting image to Artifact Registry.
           gcloud builds submit --tag "${IMAGE_URI}" .
+
+      # Add this step to the 'deploy' job in your workflow file (.yml)
+      - name: Deploy to Cloud Run
+        run: |
+          # The image path, project ID, and region are configured here
+          IMAGE_PATH="us-central1-docker.pkg.dev/infinite-bruin-477014-h1/notely-ar-repo/notely:latest"
+          PROJECT_ID="infinite-bruin-477014-h1"
+          REGION="us-central1"
+
+          gcloud run deploy notely \
+            --image $IMAGE_PATH \
+            --region $REGION \
+            --project $PROJECT_ID \
+            --allow-unauthenticated \
+            --max-instances=4
